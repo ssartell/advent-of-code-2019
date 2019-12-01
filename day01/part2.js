@@ -6,7 +6,7 @@ const sum = R.reduce(R.add, 0);
 
 const calcFuel = module => {
     const fuel = moduleFuel(module);
-    return fuel <= 0 ? 0 : fuel + calcFuel(fuel);
+    return fuel > 0 ? fuel + calcFuel(fuel) : 0;
 }
 
 const solution = R.pipe(parseInput, R.map(calcFuel), sum);
