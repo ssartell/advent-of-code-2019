@@ -1,18 +1,15 @@
 const R = require('ramda');
 
 const parseInput = R.pipe(R.trim, R.split('\n'), R.map(parseInt));
-const moduleFuel = x => R.max(0, Math.floor(x / 3) - 2);
-const modulesFuel = R.map(moduleFuel);
+const moduleFuel = x => Math.floor(x / 3) - 2;
 const sum = R.reduce(R.add, 0);
 
-const sumFuel = modules => {
-    const fuel = modulesFuel(modules);
-    const total = sum(fuel);
-
-    if (total <= 0) return total;
-    return total + sumFuel(fuel);
+const calcFuel = module => {
+    if (module <= 0) return 0;
+    const fuel = moduleFuel(module);
+    return fuel + calcFuel(fuel);
 }
 
-const solution = R.pipe(parseInput, sumFuel);
+const solution = R.pipe(parseInput, R.map(calcFuel), sum);
 
 module.exports = solution;
