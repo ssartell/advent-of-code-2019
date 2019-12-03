@@ -22,8 +22,7 @@ const extendWire = wireSteps => {
         for(let i = 0; i < step.length; i++) {
             pos.x += dir.x;
             pos.y += dir.y;
-            steps++;
-            wire.set(`${pos.x},${pos.y}`, steps);
+            wire.set(`${pos.x},${pos.y}`, ++steps);
         }
     }
 
