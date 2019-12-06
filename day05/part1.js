@@ -26,11 +26,11 @@ const getModes = R.drop(2);
 const getValue = (code, i, mode) => mode === 0 ? code[code[i]] : code[i];
 
 const ops = {
-    1: async (code, i, modes) => {
+    1: (code, i, modes) => {
         code[code[i + 3]] = getValue(code, i + 1, modes[0]) + getValue(code, i + 2, modes[1]);
         return i + 4;
     },
-    2: async (code, i, modes) => {
+    2: (code, i, modes) => {
         code[code[i + 3]] = getValue(code, i + 1, modes[0]) * getValue(code, i + 2, modes[1])
         return i + 4;
     },
@@ -38,7 +38,7 @@ const ops = {
         code[code[i + 1]] = parseInt(await ask('input: '));
         return i + 2;
     },
-    4: async (code, i, modes) => {
+    4: (code, i, modes) => {
         console.log(getValue(code, i + 1, modes[0]));
         return i + 2;
     }

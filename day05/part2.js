@@ -26,11 +26,11 @@ const getModes = R.drop(2);
 const getValue = (code, i, mode) => mode === 0 ? code[code[i]] : code[i];
 
 const ops = {
-    1: async (code, i, modes) => {
+    1: (code, i, modes) => {
         code[code[i + 3]] = getValue(code, i + 1, modes[0]) + getValue(code, i + 2, modes[1]);
         return i + 4;
     },
-    2: async (code, i, modes) => {
+    2: (code, i, modes) => {
         code[code[i + 3]] = getValue(code, i + 1, modes[0]) * getValue(code, i + 2, modes[1])
         return i + 4;
     },
@@ -38,38 +38,22 @@ const ops = {
         code[code[i + 1]] = parseInt(await ask('input: '));
         return i + 2;
     },
-    4: async (code, i, modes) => {
+    4: (code, i, modes) => {
         console.log(getValue(code, i + 1, modes[0]));
         return i + 2;
     },
-    5: async (code, i, modes) => {
-        if (getValue(code, i + 1, modes[0]) !== 0) {
-            return getValue(code, i + 2, modes[1]);
-        } else {
-            return i + 3;
-        }
-    },
-    6: async (code, i, modes) => {
-        if (getValue(code, i + 1, modes[0]) === 0) {
-            return getValue(code, i + 2, modes[1]);
-        } else {
-            return i + 3;
-        }
-    },
-    7: async (code, i, modes) => {
-        if (getValue(code, i + 1, modes[0]) < getValue(code, i + 2, modes[1])) {
-            code[code[i + 3]] = 1
-        } else {
-            code[code[i + 3]] = 0
-        }
+    5: (code, i, modes) => getValue(code, i + 1, modes[0]) !== 0 
+        ? getValue(code, i + 2, modes[1]) 
+        : i + 3,
+    6: (code, i, modes) => getValue(code, i + 1, modes[0]) === 0
+        ? getValue(code, i + 2, modes[1])
+        : i + 3,
+    7: (code, i, modes) => {
+        code[code[i + 3]] = getValue(code, i + 1, modes[0]) < getValue(code, i + 2, modes[1]) ? 1 : 0;
         return i + 4;
     },
-    8: async (code, i, modes) => {
-        if (getValue(code, i + 1, modes[0]) === getValue(code, i + 2, modes[1])) {
-            code[code[i + 3]] = 1
-        } else {
-            code[code[i + 3]] = 0
-        }
+    8: (code, i, modes) => {
+        code[code[i + 3]] = getValue(code, i + 1, modes[0]) === getValue(code, i + 2, modes[1]) ? 1 : 0;
         return i + 4;
     },
 };
@@ -86,9 +70,6 @@ const loop = async code => {
     }
 };
 
-const solution = async x => {
-    x = parseInput(x);
-    return await loop(x);
-};
+const solution = R.pipeP(x => Promise.resolve(parseInput(x)), loop);
 
 module.exports = solution;
