@@ -1,27 +1,12 @@
 const R = require('ramda');
-const debug = x => { debugger; return x; };
+const splitDigits = require('../utils').splitDigits;
 
-const rl = require('readline').createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
-
-const ask = q => {
-    return new Promise(resolve => rl.question(q, x => {
-        resolve(x);
-    }));
-};
+const rl = require('readline').createInterface({ input: process.stdin, output: process.stdout });
+const ask = q => new Promise(resolve => rl.question(q, resolve));
 
 const parseInput = R.pipe(R.trim, R.split(','), R.map(parseInt));
 
-function* splitDigits(x)  {
-    while (x) {
-        yield x % 10;
-        x = Math.floor(x / 10);
-    }
-}
-
-const getOpcode = R.pipe(R.take(2), x => x[1] * 10 + x[0]);
+const getOpcode = x => x[1] * 10 + x[0];
 const getModes = R.drop(2);
 const getValue = (code, i, mode) => mode === 0 ? code[code[i]] : code[i];
 
