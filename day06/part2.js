@@ -8,10 +8,10 @@ const sum = R.reduce(R.add, 0);
 
 const countTransfers = R.curry((object, depth, map) => {
     let satellites = map.get(object) || [];
+    if (object === 'YOU' || object === 'SAN') return depth - 1;
+    
     let transfers = R.filter(x => x !== 0, R.map(x => countTransfers(x, depth + 1, map), satellites));
-    if (object === 'YOU' || object === 'SAN') {
-        return transfers.length === 1 ? R.head(transfers) - depth : depth - 1;
-    } else if (transfers.length === 2) {
+    if (transfers.length === 2) {
         return sum(transfers) - depth * 2;
     } else if (transfers.length === 1) {
         return transfers[0];
