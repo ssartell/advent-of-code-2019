@@ -11,26 +11,24 @@ function pad(digit, width, char) {
 }
 
 async function run(day, part, shouldRunTests) {
-    var log = 'day ' + day + ', part ' + part
+  var log = 'day ' + day + ', part ' + part
 
-    day = pad(day, 2);
-	
-	var input = fs.readFileSync('day' + day + '/input.txt', 'utf8');
-	var solution = require('./day' + day + '/part' + part);
+  day = pad(day, 2);
 
-    // var stopwatch = Stopwatch.create();
+  var input = fs.readFileSync('day' + day + '/input.txt', 'utf8');
+  var solution = require('./day' + day + '/part' + part);
 
-    // stopwatch.start();
-    // var answer = await solution(input);
-    // if (answer.then) {
-    //     await answer;
-    // }
-    // stopwatch.stop();
-    
-    // log += ' : ' + stopwatch.elapsed.seconds + 's'
-    var answer = await solution(input);
-    console.log(log);
-	console.log(answer);
+  var stopwatch = Stopwatch.create();
+
+  stopwatch.start();
+  var answer = solution(input);
+  //var answer = await solution(input);
+  stopwatch.stop();
+
+  log += ' : ' + stopwatch.elapsed.seconds + 's'
+
+  console.log(log);
+  console.log(answer);
 }
 
 module.exports = run;
