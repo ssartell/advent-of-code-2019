@@ -1,7 +1,7 @@
 (async () => {
     var run = require('./scaffolding');
 
-    await run(6, 2);
+    await run(7, 1);
 
     process.exit();
 })();
