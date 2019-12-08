@@ -42,7 +42,7 @@ const ops = {
     },
 };
 
-const compileCode = R.curry((code, inputs) => {
+const runCode = R.curry((code, inputs) => {
     let outputs = [];
     let i = 0;
     while (code[i] !== 99) {
@@ -57,11 +57,11 @@ const compileCode = R.curry((code, inputs) => {
     return outputs[0];
 });
 
-const buildAmplifier = R.curry((program, phaseSetting, input) => program([phaseSetting, input]));
-const buildThruster = R.curry((amplifier, phaseSettings, input) => R.apply(R.pipe, R.map(amplifier, phaseSettings))(input));
+const amplifier = R.curry((program, phaseSetting, input) => program([phaseSetting, input]));
+const thruster = R.curry((amplifier, phaseSettings, input) => R.apply(R.pipe, R.map(amplifier, phaseSettings))(input));
 const max = R.reduce(R.max, -Infinity);
 const findBestPhaseSettings = thruster => max(R.map(x => thruster(x, 0), C.permutation(R.range(0, 5)).toArray()))
 
-const solution = R.pipe(parseInput, compileCode, buildAmplifier, buildThruster, findBestPhaseSettings);
+const solution = R.pipe(parseInput, runCode, amplifier, thruster, findBestPhaseSettings);
 
 module.exports = solution;
