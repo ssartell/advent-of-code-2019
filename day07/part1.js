@@ -1,7 +1,6 @@
 const R = require('ramda');
 const splitDigits = require('../utils').splitDigits;
 const C = require('js-combinatorics');
-const debug = x => { debugger; return x; };
 
 const parseInput = R.pipe(R.trim, R.split(','), R.map(parseInt));
 
