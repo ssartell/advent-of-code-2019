@@ -32,7 +32,7 @@ const createIntcodeComputer = (code) => {
         if (mode === 0) {
             code[raw] = value
         } else if (mode === 1) {
-            // nothing
+            throw 'nope';
         } else if (mode === 2) {
             code[relativeBase + raw] = value;
         }
@@ -41,38 +41,6 @@ const createIntcodeComputer = (code) => {
     const giveInput = input => {
         inputs.push(input);
     };
-
-    const getInstruction = () => {
-        let digits = [...splitDigits(code[i]), 0, 0, 0];
-        let modes = getModes(digits);
-        let j = 1;
-
-        let read = () => {
-            let mode = modes[j - 1];
-            let raw = code[i + j];
-            if (mode === 0) {
-                return code[raw] || 0;
-            } else if (mode === 1) {
-                return raw || 0;
-            } else if (mode === 2) {
-                return code[relativeBase + raw] || 0;
-            }
-        };
-
-        let write = (value) => {
-            let mode = modes[j - 1];
-            let raw = code[i + j];
-            if (mode === 0) {
-                code[raw] = value
-            } else if (mode === 1) {
-                // nothing
-            } else if (mode === 2) {
-                code[relativeBase + raw] = value;
-            }
-        };
-
-        return { read, write };
-    }
 
     const getOutput = () => {
         while (code[i] !== 99) {
