@@ -46,7 +46,7 @@ const createIntcodeComputer = (code) => {
         while (code[i] !== 99) {
             let digits = [...splitDigits(code[i]), 0, 0, 0];
             let opcode = getOpcode(digits);
-            modes = getModes(digits);
+            let modes = getModes(digits);
 
             let read = getValue(modes);
             let write = setValue(modes);
