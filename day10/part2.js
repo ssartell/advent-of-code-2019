@@ -1,5 +1,8 @@
 const R = require('ramda');
+const debug = x => { debugger; return x; };
 const station = { x: 13, y: 17 };
+
+const parseInput = R.pipe(R.trim, R.split('\r\n'), R.map(R.split('')));
 
 function* eachAsteroid(map) {
     for(let y = 0; y < map.length; y++)
@@ -8,18 +11,14 @@ function* eachAsteroid(map) {
                 yield { x, y };
 }
 
-const parseInput = R.pipe(R.trim, R.split('\r\n'), R.map(R.split('')));
-const angle = a => Math.atan2(station.y - a.y, a.x - station.x);
+const angle = a => (Math.PI / 2 - Math.atan2(station.y - a.y, a.x - station.x) + 2 * Math.PI) % (2 * Math.PI);
+const sameAngle = (a, b) => a.angle === b.angle;
+const manhattan = a => Math.abs(a.x - station.x) + Math.abs(a.y - station.y);
+const withAngleAndDist = R.map(a => ({ x: a.x, y: a.y, angle: angle(a), dist: manhattan(a) }));
 
-const getDetails = asteroids => asteroids
-    .map(a => ({
-        x: a.x,
-        y: a.y,
-        angle: (Math.PI / 2 - angle(a) + 2 * Math.PI) % (2 * Math.PI),
-        dist: Math.abs(a.x - station.x) + Math.abs(a.y - station.y)
-    }));
+const inLaserOrder = R.pipe(R.sortBy(x => x.dist), R.sortBy(x => x.angle), R.groupWith(sameAngle), R.transpose, R.flatten);
+const calcAnswer = a => a[199].x * 100 + a[199].y;
 
-const inLaserOrder = R.pipe(R.sortWith([R.ascend(R.prop('angle')), R.ascend(R.prop('dist'))]), R.groupWith((a, b) => a.angle === b.angle), R.transpose, R.flatten);
-const solution = R.pipe(parseInput, eachAsteroid, Array.from, getDetails, inLaserOrder, a => a[199].x * 100 + a[199].y);
+const solution = R.pipe(parseInput, eachAsteroid, Array.from, withAngleAndDist, inLaserOrder, calcAnswer);
 
 module.exports = solution;
