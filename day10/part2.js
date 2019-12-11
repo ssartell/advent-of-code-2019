@@ -1,5 +1,4 @@
 const R = require('ramda');
-const debug = x => { debugger; return x; };
 const station = { x: 13, y: 17 };
 
 const parseInput = R.pipe(R.trim, R.split('\r\n'), R.map(R.split('')));
