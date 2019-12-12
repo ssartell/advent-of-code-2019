@@ -16,11 +16,13 @@ const runRobot = prog => {
 
     while(!prog.isHalted()) {
         prog.giveInput(getColor(pos));
-        prog.run();
+        prog.run()
+        if (prog.isHalted()) break;
         setColor(pos, prog.getOutput());
         prog.run();
-        pos = { x: pos.x + dir.x, y: pos.y + dir.y };
+        if (prog.isHalted()) break;
         dir = prog.getOutput() === 0 ? turnLeft(dir) : turnRight(dir);
+        pos = { x: pos.x + dir.x, y: pos.y + dir.y };
     }
     return panels.size;
 }
