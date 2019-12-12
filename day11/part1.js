@@ -1,6 +1,5 @@
 const R = require('ramda');
 const compile = require('./intcodeComputer');
-const debug = x => { debugger; return x; };
 
 const runRobot = prog => {
     let dir = { x: 0, y: 1 };
