@@ -2,7 +2,7 @@ const R = require('ramda');
 const compile = require('./intcodeComputer');
 const debug = x => { debugger; return x; };
 
-const createRobot = prog => {
+const runRobot = prog => {
     let dir = { x: 0, y: -1};
     let pos = { x: 0, y: 0 };
     let panels = new Map();
@@ -14,21 +14,17 @@ const createRobot = prog => {
     let turnLeft = dir => ({ x: -dir.y, y: dir.x });
     let turnRight = dir => ({ x: dir.y, y: -dir.x });
 
-    let execute = () => {
-        while(!prog.isHalted()) {
-            prog.giveInput(getColor(pos));
-            prog.run();
-            setColor(pos, prog.getOutput());
-            prog.run();
-            pos = { x: pos.x + dir.x, y: pos.y + dir.y };
-            dir = prog.getOutput() === 0 ? turnLeft(dir) : turnRight(dir);
-        }
-        return panels.size;
+    while(!prog.isHalted()) {
+        prog.giveInput(getColor(pos));
+        prog.run();
+        setColor(pos, prog.getOutput());
+        prog.run();
+        pos = { x: pos.x + dir.x, y: pos.y + dir.y };
+        dir = prog.getOutput() === 0 ? turnLeft(dir) : turnRight(dir);
     }
-
-    return execute;
+    return panels.size;
 }
 
-const solution = R.pipe(compile, createRobot, R.call);
+const solution = R.pipe(compile, runRobot);
 
 module.exports = solution;
