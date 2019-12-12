@@ -66,19 +66,9 @@ const compile = (code) => {
                 i += 2;
                 return halted;
             } else if (opcode === 5) {
-                i += read(1) !== 0 ? read(2) : 3;
-                // if (read(1) !== 0) {
-                //     i = read(2);
-                // } else {
-                //     i += 3;
-                // }
+                i = read(1) !== 0 ? read(2) : i + 3;
             } else if (opcode === 6) {
-                i += read(1) === 0 ? read(2) : 3;
-                // if (read(1) === 0) {
-                //     i = read(2);
-                // } else {
-                //     i += 3;
-                // }
+                i = read(1) === 0 ? read(2) : i + 3;
             } else if (opcode === 7) {
                 write(3, read(1) < read(2) ? 1 : 0);
                 i += 4;
