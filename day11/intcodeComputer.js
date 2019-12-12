@@ -1,13 +1,12 @@
 const R = require('ramda');
 const splitDigits = require('../utils').splitDigits;
-const C = require('js-combinatorics');
 
 const parseInput = R.pipe(R.trim, R.split(','), R.map(parseInt));
 
-const createIntcodeComputer = (code) => {
-    code = [...code];
+const compile = (code) => {
+    code = parseInput(code);
     let i = 0;
-    let running = false;
+    let halted = false;
     let inputs = [];
     let output = undefined;
     let relativeBase = 0;
@@ -65,19 +64,21 @@ const createIntcodeComputer = (code) => {
             } else if (opcode === 4) {
                 output = read(1);
                 i += 2;
-                return running;
+                return halted;
             } else if (opcode === 5) {
-                if (read(1) !== 0) {
-                    i = read(2);
-                } else {
-                    i += 3;
-                }
+                i += read(1) !== 0 ? read(2) : 3;
+                // if (read(1) !== 0) {
+                //     i = read(2);
+                // } else {
+                //     i += 3;
+                // }
             } else if (opcode === 6) {
-                if (read(1) === 0) {
-                    i = read(2);
-                } else {
-                    i += 3;
-                }
+                i += read(1) === 0 ? read(2) : 3;
+                // if (read(1) === 0) {
+                //     i = read(2);
+                // } else {
+                //     i += 3;
+                // }
             } else if (opcode === 7) {
                 write(3, read(1) < read(2) ? 1 : 0);
                 i += 4;
@@ -90,28 +91,18 @@ const createIntcodeComputer = (code) => {
             }
         }
 
-        running = false;    
-        return running;
+        halted = true;    
+        return halted;
     };
     
-    const isRunning = () => running;
+    const isHalted = () => halted;
 
     return {
         giveInput,
         getOutput,
-        isRunning,
+        isHalted,
         run
     };
 };
 
-const execute = prog => {
-    prog.giveInput(2);
-    while(prog.run()) {
-        console.log(prog.getOutput());
-    }
-    return prog.getOutput();
-}
-
-const solution = R.pipe(parseInput, createIntcodeComputer, execute);
-
-module.exports = solution;
+module.exports = compile;
