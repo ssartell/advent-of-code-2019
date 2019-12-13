@@ -20,7 +20,6 @@ const simulate = moons => {
             }
         }
     }
-
     return moons;
 };
 
