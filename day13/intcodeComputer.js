@@ -59,6 +59,10 @@ const compile = (code) => {
                 write(3, read(1) * read(2));
                 i += 4;
             } else if (opcode === 3) {
+                if (inputs.length === 0) {
+                    halted = true;
+                    return halted;
+                }
                 write(1, inputs.shift());
                 i += 2;
             } else if (opcode === 4) {
