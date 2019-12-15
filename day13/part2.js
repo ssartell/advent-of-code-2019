@@ -1,30 +1,25 @@
 const R = require('ramda');
 const compile = require('./intcodeComputer');
-const debug = x => { debugger; return x; };
 
 const parseInput = R.pipe(R.trim, R.split(','), R.map(parseInt));
 
 const run = prog => {
     let screen = [];
-    let [bx, by] = [0, 0];
-    let [px, py] = [0, 0];
-    let score = 0;
-    let joystick = 0;
+    let [ball, paddle, score] = [0, 0, 0];
     while(!prog.isHalted()) {
         let outputs = [];
-        joystick = Math.sign(bx - px);
 
         while(outputs.length < 3) {
             prog.run();
             if (prog.needsInput())
-                prog.giveInput(joystick);
+                prog.giveInput(Math.sign(ball - paddle));
             if (prog.hasOutput()) outputs.push(prog.getOutput());
             if (prog.isHalted()) break;
         }
 
         let [x, y, tileId] = outputs;
 
-         if (x === -1 && y === 0) {
+        if (x === -1 && y === 0) {
             score = tileId;
         } else {
             screen[y] = screen[y] || [];
@@ -36,10 +31,10 @@ const run = prog => {
                 screen[y][x] = '=';
             } else if (tileId === 3) {
                 screen[y][x] = '_';
-                [px, py] = [x, y];
+                paddle = x;
             } else if (tileId === 4) {
                 screen[y][x] = 'o';
-                [bx, by] = [x, y];
+                ball = x;
             }
         }
 
