@@ -4,10 +4,12 @@ let ansi = require('ansi');
 let cursor = ansi(process.stdout);
 const debug = x => { debugger; return x; };
 
+const parseInput = R.pipe(R.trim, R.split(','), R.map(parseInt));
+
 const run = prog => {
     let screen = [];
     let i = 0;
-    while(!prog.isHalted()) {
+    while(!prog.isHalted() && !prog.needsInput()) {
         prog.run();
         if (prog.isHalted()) break;
         let x = prog.getOutput();
@@ -41,10 +43,10 @@ const run = prog => {
 
 const draw = screen => {
     console.clear();
-    screen.map(R.join('')).forEach(x => console.log(x));
+    console.log(R.join('\n', screen.map(R.join(''))));
     return screen;
 }
 
-const solution = R.pipe(compile, run, draw, R.flatten, R.filter(x => x === '='), R.length);
+const solution = R.pipe(parseInput, compile, run, draw, R.flatten, R.filter(x => x === '='), R.length);
 
 module.exports = solution;

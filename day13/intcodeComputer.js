@@ -1,12 +1,11 @@
 const R = require('ramda');
 const splitDigits = require('../utils').splitDigits;
 
-const parseInput = R.pipe(R.trim, R.split(','), R.map(parseInt));
-
-const compile = (code) => {
-    code = parseInput(code);
+const compile = code => {
     let i = 0;
     let halted = false;
+    let inputed = false;
+    let outputed = false;
     let inputs = [];
     let output = undefined;
     let relativeBase = 0;
@@ -38,10 +37,14 @@ const compile = (code) => {
     });
 
     const giveInput = input => {
+        inputed = false;
         inputs.push(input);
     };
 
-    const getOutput = () => output;
+    const getOutput = () => {
+        outputed = false;
+        return output;
+    };
 
     const run = () => {
         while (code[i] !== 99) {
@@ -60,15 +63,16 @@ const compile = (code) => {
                 i += 4;
             } else if (opcode === 3) {
                 if (inputs.length === 0) {
-                    halted = true;
-                    return halted;
+                    inputed = true;
+                    return;
                 }
                 write(1, inputs.shift());
                 i += 2;
             } else if (opcode === 4) {
                 output = read(1);
                 i += 2;
-                return halted;
+                outputed = true;
+                return;
             } else if (opcode === 5) {
                 i = read(1) !== 0 ? read(2) : i + 3;
             } else if (opcode === 6) {
@@ -86,13 +90,17 @@ const compile = (code) => {
         }
 
         halted = true;    
-        return halted;
+        return;
     };
     
     const isHalted = () => halted;
+    const needsInput = () => inputed;
+    const hasOutput = () => outputed;
 
     return {
+        needsInput,
         giveInput,
+        hasOutput,
         getOutput,
         isHalted,
         run
