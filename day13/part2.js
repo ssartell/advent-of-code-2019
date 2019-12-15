@@ -1,7 +1,5 @@
 const R = require('ramda');
 const compile = require('./intcodeComputer');
-let ansi = require('ansi');
-let cursor = ansi(process.stdout);
 const debug = x => { debugger; return x; };
 
 const parseInput = R.pipe(R.trim, R.split(','), R.map(parseInt));
@@ -14,18 +12,19 @@ const run = prog => {
     let joystick = 0;
     while(!prog.isHalted()) {
         let outputs = [];
-        joystick = Math.sign(px - bx);
+        joystick = Math.sign(bx - px);
 
         while(outputs.length < 3) {
             prog.run();
-            if (prog.needsInput()) prog.giveInput(joystick);
+            if (prog.needsInput())
+                prog.giveInput(joystick);
             if (prog.hasOutput()) outputs.push(prog.getOutput());
             if (prog.isHalted()) break;
         }
-        
+
         let [x, y, tileId] = outputs;
 
-        if (x === -1 && y === 0) {
+         if (x === -1 && y === 0) {
             score = tileId;
         } else {
             screen[y] = screen[y] || [];

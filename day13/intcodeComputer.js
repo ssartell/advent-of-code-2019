@@ -48,7 +48,7 @@ const compile = code => {
 
     const run = () => {
         while (code[i] !== 99) {
-            let digits = [...splitDigits(code[i]), 0, 0, 0];
+            let digits = [...splitDigits(code[i]), ...R.repeat(0, 10)];
             let opcode = getOpcode(digits);
             let modes = getModes(digits);
 
