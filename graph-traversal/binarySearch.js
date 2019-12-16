@@ -4,7 +4,7 @@ module.exports = (low, high, comparatorToTarget, timeout = Infinity) => {
         var middle = Math.floor((high + low) / 2);
         var comparison = comparatorToTarget(middle);
         if (comparison < 0) {
-            if (low === high) return low;
+            if (low >= high) return low;
             low = middle + 1;
         } else if (comparison > 0) {
             high = middle - 1;
