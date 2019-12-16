@@ -9,17 +9,16 @@ const parseInput = R.pipe(R.trim, R.split(','), R.map(parseInt));
 const run = prog => {
     let screen = [];
     let i = 0;
-    while(!prog.isHalted() && !prog.needsInput()) {
+    while(!prog.isHalted()) {
+        if (prog.needsInput()) prog.giveInput(0);
+        
         prog.run();
-        if (prog.isHalted()) break;
         let x = prog.getOutput();
 
         prog.run();
-        if (prog.isHalted()) break;
         let y = prog.getOutput();
 
         prog.run();
-        if (prog.isHalted()) break;
         let tileId = prog.getOutput();
 
         screen[y] = screen[y] || [];
