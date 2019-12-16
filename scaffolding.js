@@ -10,7 +10,7 @@ function pad(digit, width, char) {
   return digit.length >= width ? digit : new Array(width - digit.length + 1).join(char) + digit;
 }
 
-async function run(day, part, shouldRunTests) {
+function run(day, part, shouldRunTests) {
   var log = 'day ' + day + ', part ' + part
 
   day = pad(day, 2);
