@@ -1,7 +1,5 @@
 const R = require('ramda');
-const Stack = require('mnemonist/stack');
 const compile = require('./intcodeComputer');
-const debug = x => { debugger; return x; };
 
 const dirs = {
     1: [0, 1],
@@ -26,9 +24,8 @@ const run = prog => {
 
     for(let i = 1; i < 5; i++) {
         prog.run();
-        if (prog.needsInput()) prog.giveInput(i);
+        prog.giveInput(i);
         prog.run();
-        if (!prog.hasOutput()) debugger;
         let output = prog.getOutput();
         if (output === 0) {
             continue;
@@ -38,21 +35,13 @@ const run = prog => {
             let out = run(prog);
             if (out > 0) return out;
             prog.run();
-            if (prog.needsInput()) {
-                prog.giveInput(opposite(i));
-            } else {
-                debugger;
-            }
+            prog.giveInput(opposite(i));
             prog.run();
-            if (!prog.hasOutput()) debugger;
-            if (prog.getOutput() !== 1) debugger;
             pos = updatePos(opposite(i));
             steps--;
         } else if (output === 2) {
             steps++;
             return steps;
-        } else {
-            throw 'nope.';
         }
     }
 }

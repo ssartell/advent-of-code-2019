@@ -1,8 +1,5 @@
 const R = require('ramda');
-const bfs = require('../graph-traversal/bfs');
-const Stack = require('mnemonist/stack');
 const compile = require('./intcodeComputer');
-const debug = x => { debugger; return x; };
 
 const dirs = {
     1: [0, 1],
@@ -27,28 +24,19 @@ const run = prog => {
 
     for(let i = 1; i < 5; i++) {
         prog.run();
-        if (prog.needsInput()) prog.giveInput(i);
+        prog.giveInput(i);
         prog.run();
-        if (!prog.hasOutput()) debugger;
         let output = prog.getOutput();
         if (output === 0) {
             continue;
         } else if (output === 1 || output === 2) {
             pos = updatePos(pos, i);
             if (output === 2) osPos = pos;
-            let out = run(prog);
+            run(prog);
             prog.run();
-            if (prog.needsInput()) {
-                prog.giveInput(opposite(i));
-            } else {
-                debugger;
-            }
+            prog.giveInput(opposite(i));
             prog.run();
-            if (!prog.hasOutput()) debugger;
-            if (prog.getOutput() === 0) debugger;
             pos = updatePos(pos, opposite(i));
-        } else {
-            throw 'nope.';
         }
     }
 }
