@@ -1,7 +1,6 @@
 const R = require('ramda');
 const bfs = require('../graph-traversal/bfs');
 const astar = require('../graph-traversal/a-star');
-const debug = x => { debugger; return x; };
 
 const parseInput = R.pipe(R.trim, R.split('\r\n'), R.map(R.split('')));
 
@@ -37,25 +36,36 @@ const hasVisited = (keys, key) => R.contains(key, keys);
 const getOptions = R.curry((paths, keys, current) => {
     let neighbors = [];
     for(var key of keys.filter(x => !hasVisited(current.keys, x))) {
-        let pathKey = `${current.key}->${key}`;
-        let path = paths.get(pathKey);
-        if (canPass(current.keys, path.doors))
-            neighbors.push({ key, keys: [... current.keys, key], steps: current.steps + path.steps });
+        for(let i = 0; i < current.bots.length; i++) {
+            let bot = current.bots[i];
+            let pathKey = `${bot}->${key}`;
+            let path = paths.get(pathKey);
+            if (!path) continue;
+            if (canPass(current.keys, path.doors))
+                neighbors.push({ bots: R.adjust(i, x => key, current.bots), keys: [... current.keys, key], steps: current.steps + path.steps });
+        }
     }
     return neighbors;
 });
 
 const crosswalk = map => {
+    map[39][39] = '@'; map[39][40] = '#'; map[39][41] = '@';
+    map[40][39] = '#'; map[40][40] = '#'; map[40][41] = '#';
+    map[41][39] = '@'; map[41][40] = '#'; map[41][41] = '@';
+
     let locations = new Map();
     let keys = [];
+    let e = 0;
     for(let y = 0; y < map.length; y++) {
         for(let x = 0; x < map[0].length; x++) {
             let char = map[y][x];
             if (isWall(char) || isSpace(char)) {
                 continue;
             } else {
-                if (isKey(char)) 
+                if (isKey(char))
                     keys.push(char);
+                if (isEntrance(char))
+                    char += e++;
                 locations.set(char, { x, y, steps: 0, doors: [] });
             }
         }
@@ -86,14 +96,16 @@ const crosswalk = map => {
             return a;
         }, new Map());
     
-    return astar(
-        { key: '@', keys: [], steps: 0 },
+    let result = astar(
+        { bots: ['@0', '@1', '@2', '@3'], keys: [], steps: 0 },
         isEnd(keys),
         getOptions(paths, keys), 
         x => x.steps,
-        x => (26 - x.keys.length) * minDist,
-        x => R.join('', R.sortBy(R.identity, x.keys)) + '-' + x.key
+        x => (keys.length - x.keys.length) * minDist,
+        x => R.join('', R.sortBy(R.identity, x.keys)) + '-' + x.bots.join('')
     );
+    console.log(result.keys.join(''));
+    return result.steps;
 };
 
 const solution = R.pipe(parseInput, crosswalk);
