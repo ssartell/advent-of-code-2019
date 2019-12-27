@@ -1,6 +1,5 @@
 const R = require('ramda');
 const bfs = require('../graph-traversal/bfs');
-const debug = x => { debugger; return x; };
 
 const parseInput = R.pipe(R.trim, R.split('\r\n'), R.map(R.split('')));
 
@@ -26,8 +25,6 @@ const getNeighbors = R.curry((map, pos) => {
         let newPos = add(pos, dir);
         if (!isWall(map[newPos.y][newPos.x])) {
             neighbors.push(newPos);
-            if (newPos.x < 0 || newPos.y < 0)
-                debugger;
         }
     }
     return neighbors;
