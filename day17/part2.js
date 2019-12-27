@@ -46,6 +46,7 @@ const mainFunction = (moves, A, B, C) => {
         .replace(new RegExp(B, 'g'), 'B')
         .replace(new RegExp(C, 'g'), 'C');
 }
+const validMain = main => main.indexOf('R') < 0 && main.indexOf('L') < 0;
 
 function *possibleRoutines(moves) {
     for(let i = 1; i < moves.length - 1; i++) {
@@ -62,8 +63,8 @@ const toInputs = moves => {
         for(let B of possibleRoutines(moves)) {
             for(let C of possibleRoutines(moves)) {
                 let main = mainFunction(moves, A, B, C);
-                if (main.indexOf('R') >= 0 || main.indexOf('L') >= 0) continue;
-                return [main, A, B, C, 'Y'];
+                if (!validMain(main)) continue;
+                return [main, A, B, C, 'N'];
             }
         }
     }
