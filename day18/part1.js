@@ -34,7 +34,7 @@ const getNeighbors = R.curry((map, pos) => {
 });
 
 const shortestPathKey = (paths, notVisited, visited, current) => {
-    return R.join('', R.sortBy(x => x, visited)) + '-' + current;
+    return R.join('', R.sortBy(R.identity, visited)) + '-' + current;
 }
 
 const shortestPath = (paths, notVisited, visited, current) => {
