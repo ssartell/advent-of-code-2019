@@ -68,7 +68,7 @@ const toInputs = moves => {
             }
         }
     }
-}
+};
 
 const run = prog => {
     prog[0] = 2;
