@@ -25,14 +25,12 @@ const getNeighbors = R.curry((map, pos) => {
     let neighbors = [];
     for(let dir of dirs) {
         let newPos = add(pos, dir);
-        if (!isWall(map[newPos.y][newPos.x])) {
+        if (!isWall(map[newPos.y][newPos.x]))
             neighbors.push(newPos);
-            if (newPos.x < 0 || newPos.y < 0)
-                debugger;
-        }
     }
     return neighbors;
 });
+
 const isEnd = R.curry((keys, x) => x.keys.length === keys.length);
 const canPass = (keys, doors) => R.without(keys, doors).length === 0;
 const hasVisited = (keys, key) => R.contains(key, keys);
@@ -41,22 +39,11 @@ const getOptions = R.curry((paths, keys, current) => {
     for(var key of keys.filter(x => !hasVisited(current.keys, x))) {
         let pathKey = `${current.key}->${key}`;
         let path = paths.get(pathKey);
-        if (canPass(current.keys, path.doors)) {
+        if (canPass(current.keys, path.doors))
             neighbors.push({ key, keys: [... current.keys, key], steps: current.steps + path.steps });
-        }
     }
     return neighbors;
 });
-
-const shortestPath = (paths, keys, minDist, start) => {
-    return astar(
-        { key: start, keys: [], steps: 0 },
-        isEnd(keys),
-        getOptions(paths, keys), 
-        x => x.steps,
-        x => (26 - x.keys.length) * minDist,
-        x => R.join('', R.sortBy(R.identity, x.keys)) + '-' + x.key)
-}
 
 const crosswalk = map => {
     let locations = new Map();
@@ -99,7 +86,14 @@ const crosswalk = map => {
             return a;
         }, new Map());
     
-    return shortestPath(paths, keys, minDist, '@');
+    return astar(
+        { key: '@', keys: [], steps: 0 },
+        isEnd(keys),
+        getOptions(paths, keys), 
+        x => x.steps,
+        x => (26 - x.keys.length) * minDist,
+        x => R.join('', R.sortBy(R.identity, x.keys)) + '-' + x.key
+    );
 };
 
 const solution = R.pipe(parseInput, crosswalk);
