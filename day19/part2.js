@@ -16,11 +16,9 @@ const getReading = (code, x, y) => {
 const run = code => {
     let [x, y] = [0, 0];
     while(true) {
-        let readingRight = getReading(code, x + 99, y);
-        let readingDown = getReading(code, x, y + 99);
-        if (readingRight === 0) {
+        if (getReading(code, x + 99, y) === 0) {
             y++;
-        } else if (readingDown === 0) {
+        } else if (getReading(code, x, y + 99) === 0) {
             x++;
         } else {
             return x * 10000 + y;
