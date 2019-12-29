@@ -6,7 +6,7 @@ const debug = x => { debugger; return x; };
 const toAscii = str => Array.from(str).map(x => x.charCodeAt(0));
 const fromAscii = ascii => String.fromCharCode.apply(null, ascii);
 
-const script = fs.readFileSync('./day21/part2.sc', 'ascii')
+const script = fs.readFileSync('./day21/part2.txt', 'ascii')
     .replace(/\r/g, '')
     .replace(/\n\n/g, '\n')
     .replace(/\/\/.*\n/g, '');
