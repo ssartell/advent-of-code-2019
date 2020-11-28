@@ -30,16 +30,13 @@ const toBinary = (scan) => {
     return int;
 }
 
-const countBits = R.memoizeWith(R.identity, n => {
-    if (n === 0) return 0;
-    return (n & 1) + countBits(n >>> 1);
-});
+const countBits = n => (n === 0) ? 0 : (n & 1) + countBits(n >>> 1);
 
 const min = R.reduce(R.min, Infinity);
 const max = R.reduce(R.max, -Infinity);
 
 const fromCoords = (x, y) => y * 5 + x;
-const getBit = (layout, x, y) => layout >> (24 - fromCoords(x, y)) & 1;
+const getBit = (layout, x, y) => (layout >> (24 - fromCoords(x, y))) & 1;
 
 const tick = (levels) => {
     let depths = Object.keys(levels).map(Number);    
@@ -79,8 +76,8 @@ const tick = (levels) => {
                 if (x === 3 && y === 2)
                     count += countBits((levels[depth + 1] || 0) & outerRight);
 
-                let hasInsect = ((bit === 1 && count === 1) || (bit === 0 && (count === 1 || count === 2)));
-                newlayout = (newlayout << 1) | (hasInsect ? 1 : 0);
+                let hasInsect = (bit === 1 && count === 1) || (bit === 0 && (count === 1 || count === 2));
+                newlayout = (newlayout << 1) | hasInsect;
             }
         }
 
