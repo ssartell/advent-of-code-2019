@@ -8,11 +8,13 @@ const rightShiftMask =  0b0111101111011110111101111;
 
 const parseInput = R.pipe(R.trim, R.split('\n'), R.map(R.pipe(R.trim, R.split(''))));
 
-const toScan = R.pipe(x => x.toString(2).padStart(25, '0'), R.reverse, R.splitEvery(5), R.map(R.split('')));
+const toScan = R.pipe(x => x.toString(2).padStart(25, '0'), R.replace(/0/g, '.'), R.replace(/1/g, '#'), R.splitEvery(5), R.map(R.split('')));
+const log = R.pipe(toScan, R.map(R.pipe(R.join(''), console.log)), x => console.log(" "));
+
 const toBinary = (scan) => {
     let int = 0;
-    for(let row of R.reverse(scan)) {
-        for(let space of R.reverse(row)) {
+    for(let row of scan) {
+        for(let space of row) {
             int = int << 1 | (space === '#' ? 1 : 0);
         }
     }
@@ -43,6 +45,7 @@ const run = (initial) => {
     let prevLayouts = new Set();
     let prevLayout = initial;
     while(true) {
+        log(prevLayout);
         let nextLayout = tick(prevLayout);
         if (prevLayouts.has(nextLayout))
             return nextLayout;
