@@ -6,27 +6,19 @@ const mask =            0b1111111111111111111111111;
 const leftShiftMask =   0b1111011110111101111011110;
 const rightShiftMask =  0b0111101111011110111101111;
 
-const parseInput = R.pipe(R.trim, R.split('\n'), R.map(R.pipe(R.trim, R.split(''))));
+const parseInput = R.pipe(R.trim, R.replace(/\r\n/g, ''), R.reverse);
 
-const toScan = R.pipe(x => x.toString(2).padStart(25, '0'), R.replace(/0/g, '.'), R.replace(/1/g, '#'), R.splitEvery(5), R.map(R.split('')));
+const toScan = R.pipe(x => x.toString(2).substr(-25).padStart(25, '0'), R.replace(/0/g, '.'), R.replace(/1/g, '#'), R.splitEvery(5), R.map(R.split('')));
 const log = R.pipe(toScan, R.map(R.pipe(R.join(''), console.log)), x => console.log(" "));
 
-const toBinary = (scan) => {
-    let int = 0;
-    for(let row of scan) {
-        for(let space of row) {
-            int = int << 1 | (space === '#' ? 1 : 0);
-        }
-    }
-    return int;
-}
+const toBinary = R.reduce((int, x) => (int << 1) | (x === '#'), 0);
 
 const tick = (layout) => {
     let a = layout;
     let b = layout << 5;
     let c = layout >> 5;
-    let d = layout << 1 & leftShiftMask;
-    let e = layout >> 1 & rightShiftMask;
+    let d = (layout << 1) & leftShiftMask;
+    let e = (layout >> 1) & rightShiftMask;
 
     return (~b & ~c & ~d & e 
         | ~b & ~c & d & ~e 
@@ -42,15 +34,13 @@ const tick = (layout) => {
 }
 
 const run = (initial) => {
-    let prevLayouts = new Set();
-    let prevLayout = initial;
+    let layouts = new Set();
+    let layout = initial;
     while(true) {
-        log(prevLayout);
-        let nextLayout = tick(prevLayout);
-        if (prevLayouts.has(nextLayout))
-            return nextLayout;
-        prevLayouts.add(nextLayout);
-        prevLayout = nextLayout;
+        layouts.add(layout);
+        layout = tick(layout);
+        if (layouts.has(layout))
+            return layout;
     }
 }
 
