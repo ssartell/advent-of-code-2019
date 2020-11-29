@@ -5,9 +5,6 @@ const debug = x => { debugger; return x; };
 const deckSize = 119315717514047;
 const shuffleTimes = 101741582076661;
 
-// const deckSize = 10007;
-// const shuffleTimes = 1;
-
 const lineMatch = /([^-\d]*)(-?\d+)?/;
 const parseLine = R.pipe(R.trim, R.match(lineMatch), R.tail, R.zipObj(['action', 'value']), R.evolve({ action: R.trim, value: parseInt }));
 const parseInput = R.pipe(R.trim, R.split('\n'), R.map(parseLine));
