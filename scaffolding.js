@@ -10,6 +10,7 @@ function pad(digit, width, char) {
   return digit.length >= width ? digit : new Array(width - digit.length + 1).join(char) + digit;
 }
 
+//async function run(day, part, shouldRunTests) {
 function run(day, part, shouldRunTests) {
   var log = 'day ' + day + ', part ' + part
 
@@ -18,13 +19,12 @@ function run(day, part, shouldRunTests) {
   var input = fs.readFileSync('day' + day + '/input.txt', 'utf8');
   var solution = require('./day' + day + '/part' + part);
 
-  var stopwatch = Stopwatch.create();
+  // var answer = await solution(input);
 
+  var stopwatch = Stopwatch.create();
   stopwatch.start();
   var answer = solution(input);
-  //var answer = await solution(input);
   stopwatch.stop();
-
   log += ' : ' + stopwatch.elapsed.seconds + 's'
 
   console.log(log);

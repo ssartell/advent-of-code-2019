@@ -8,7 +8,7 @@ const parseInput = R.pipe(R.trim, R.split('\n'), R.map(parseLine));
 
 const applyShuffle = (card, shuffle) => {
     if (shuffle.action === 'deal into new stack') {
-        return (n - 1) - card;
+        return ((n - 1) - card) % n;
     } else if (shuffle.action === 'deal with increment') {
         return (card * shuffle.value) % n;
     } else if (shuffle.action === 'cut') {

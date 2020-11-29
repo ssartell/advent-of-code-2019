@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "ansi": "^0.3.1",
+    "big-integer": "^1.6.48",
     "compute-lcm": "^1.1.0",
     "inquirer": "^7.0.0",
     "js-combinatorics": "^0.5.4",
